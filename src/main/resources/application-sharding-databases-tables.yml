@@ -1,20 +1,56 @@
 spring:
   shardingsphere:
     datasource:
-      names: sharding0,sharding1
+      names: sharding_0,sharding_1
 
-      sharding0:
+      sharding_0:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost/sharding0?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+        jdbc-url: jdbc:mysql://localhost/sharding_0?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
         username: root
         password:
         max-active: 16
 
-      sharding1:
+      sharding_1:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost/sharding1?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+        jdbc-url: jdbc:mysql://localhost/sharding_1?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
         username: root
         password:
         max-active: 16
+
+    sharding:
+      default-database-strategy:
+        inline:
+          sharding-column: user_id
+          algorithm-expression: sharding_$->{user_id % 2}
+      binding-tables: t_order,t_order_item
+      #broadcast-tables: t_address
+      default-data-source-name: sharding_0
+      
+      tables:
+        t_order:
+          actual-data-nodes: sharding_$->{0..1}.t_order_$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: order_id
+              algorithm-expression: t_order_$->{order_id % 2}
+          key-generator:
+            column: order_id
+            type: SNOWFLAKE
+            props:
+              worker:
+                id: 123
+
+        t_order_item:
+          actual-data-nodes: ds_$->{0..1}.t_order_item_$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: order_id
+              algorithm-expression: t_order_item_$->{order_id % 2}
+          key-generator:
+            column: order_item_id
+            type: SNOWFLAKE
+            props:
+              worker:
+                id: 123

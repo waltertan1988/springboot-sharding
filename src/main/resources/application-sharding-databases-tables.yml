@@ -1,0 +1,20 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: sharding0,sharding1
+
+      sharding0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost/sharding0?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+        username: root
+        password:
+        max-active: 16
+
+      sharding1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost/sharding1?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+        username: root
+        password:
+        max-active: 16

@@ -1,4 +1,4 @@
-package com.walter.demo;
+package com.walter;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

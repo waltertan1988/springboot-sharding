@@ -9,8 +9,6 @@ import javax.sql.DataSource;
 
 @RestController
 public class DemoController {
-    @Autowired
-    private DataSource dataSource;
 
     @GetMapping("/ping")
     public String ping(){

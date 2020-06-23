@@ -2,12 +2,14 @@ package com.walter.dao.entity;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "T_ORDER")
+@DynamicUpdate
 @ToString(callSuper = true)
 public class Order {
 

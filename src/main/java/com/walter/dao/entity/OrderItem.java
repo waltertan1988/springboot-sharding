@@ -2,6 +2,7 @@ package com.walter.dao.entity;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "T_ORDER_ITEM")
+@DynamicUpdate
 @ToString(callSuper = true)
 public class OrderItem {
 

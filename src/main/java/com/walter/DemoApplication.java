@@ -8,10 +8,11 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication(exclude = {
-		DataSourceAutoConfiguration.class,
-		HibernateJpaAutoConfiguration.class,
-		DataSourceTransactionManagerAutoConfiguration.class})
+@SpringBootApplication
+//		(exclude = {
+//		DataSourceAutoConfiguration.class,
+//		HibernateJpaAutoConfiguration.class,
+//		DataSourceTransactionManagerAutoConfiguration.class})
 @EnableTransactionManagement
 @EnableConfigurationProperties
 public class DemoApplication {

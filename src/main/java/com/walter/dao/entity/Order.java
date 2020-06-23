@@ -3,9 +3,7 @@ package com.walter.dao.entity;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -15,6 +13,7 @@ public class Order {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
     @Column(name = "ORDER_ID", unique = true, nullable = false)
     private long orderId;
 

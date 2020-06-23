@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Data
@@ -15,6 +16,7 @@ public class OrderItem {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
     @Column(name = "ORDER_ITEM_ID", unique = true, nullable = false)
     private long orderItemId;
 

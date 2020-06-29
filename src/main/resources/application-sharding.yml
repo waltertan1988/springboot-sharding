@@ -1,0 +1,34 @@
+shardingsphere:
+  datasource:
+    name: sharding
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    hosts: localhost,localhost
+#    url: jdbc:mysql://{HOST}/${spring.shardingsphere.datasource.name}{DS_NUM}?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+#    username: root
+#    password:
+#  sharding:
+#    binding-tables: t_order,t_order_item
+#    default-data-source-name: ${spring.shardingsphere.datasource.name}0
+#    default-database-strategy:
+#      inline:
+#        algorithm-expression: ${spring.shardingsphere.datasource.name}$->{user_id % 2}
+#        sharding-column: user_id
+#    tables:
+#      t_order:
+#        actual-data-nodes: ${spring.shardingsphere.datasource.name}$->{0..1}.t_order$->{0..1}
+#        key-generator:
+#          column: order_id
+#          type: SNOWFLAKE
+#        table-strategy:
+#          inline:
+#            algorithm-expression: t_order$->{order_id % 2}
+#            sharding-column: order_id
+#      t_order_item:
+#        actual-data-nodes: ${spring.shardingsphere.datasource.name}$->{0..1}.t_order_item$->{0..1}
+#        key-generator:
+#          column: order_item_id
+#          type: SNOWFLAKE
+#        table-strategy:
+#          inline:
+#            algorithm-expression: t_order_item$->{order_id % 2}
+#            sharding-column: order_id

@@ -3,7 +3,6 @@ package com.walter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.walter.dao.entity.Order;
-import com.walter.dao.repository.OrderItemRepository;
 import com.walter.dao.repository.OrderRepository;
 import com.walter.util.SequenceGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.sql.DataSource;
 import java.util.Optional;
 
 @Slf4j
@@ -21,11 +19,7 @@ import java.util.Optional;
 @SpringBootTest
 public class DemoApplicationTests {
 	@Autowired
-	private DataSource dataSource;
-	@Autowired
 	private OrderRepository orderRepository;
-	@Autowired
-	private OrderItemRepository orderItemRepository;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 

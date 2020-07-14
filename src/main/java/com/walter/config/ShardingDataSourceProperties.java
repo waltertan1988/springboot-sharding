@@ -12,13 +12,12 @@ import java.util.List;
 
 @Data
 @Configuration
-@PropertySource("classpath:application-sharding.yml")
-@ConfigurationProperties("shardingsphere")
-public class JpaConfigProperties {
-    private String datasourceName;
-    private String datasourceDriverClassName;
-    private List<String> datasourceHosts;
-    private String datasourceUrlPattern;
-    private String datasourceUsername;
-    private String datasourcePassword;
+@ConfigurationProperties("shardingsphere.datasource")
+public class ShardingDataSourceProperties {
+    private String name;
+    private String driverClassName;
+    private List<String> hosts;
+    private String urlPattern;
+    private String username;
+    private String password;
 }

@@ -47,6 +47,7 @@ public class ShardingJpaConfig {
         // 配置默认的分片规则
         shardingRuleConfig.setDefaultDataSourceName(dsName + 0);
         shardingRuleConfig.setDefaultDatabaseShardingStrategyConfig(newDefaultDatabaseShardingStrategyConfiguration(dsName, DS_COUNT, "user_id"));
+        // 设置绑定表
         shardingRuleConfig.setBindingTableGroups(Arrays.asList("t_order,t_order_item"));
 
         // 配置Order的分片规则
@@ -59,9 +60,12 @@ public class ShardingJpaConfig {
                 "t_order_item", TABLE_COUNT, "order_id", true);
         shardingRuleConfig.getTableRuleConfigs().add(orderItemTableRuleConfig);
 
+        // 设置额外属性
+        Properties props = new Properties();
+        props.setProperty("sql.show", "true");
         try {
             // 获取数据源对象
-            return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfig, new Properties());
+            return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfig, props);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

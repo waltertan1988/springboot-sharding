@@ -6,6 +6,8 @@ shardingsphere:
     url-pattern: jdbc:mysql://{HOST}/${shardingsphere.datasource.name}{DS_NUM}?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
     username: root
     password:
+    entity-packages-to-scan: com.walter.dao.entity
+    table-count: 2
 
 #spring:
 #  jpa:
@@ -41,7 +43,8 @@ shardingsphere:
 #        inline:
 #          sharding-column: user_id
 #          algorithm-expression: sharding$->{user_id % 2}
-#      binding-tables: t_order,t_order_item
+#      binding-tables:
+#        - t_order,t_order_item
 #      #broadcast-tables: t_address
 #      default-data-source-name: sharding0
 #

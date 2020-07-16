@@ -20,7 +20,7 @@ import java.util.Set;
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DemoApplicationTests {
+public class JpaTests {
 	@Autowired
 	private OrderRepository orderRepository;
 	@Autowired
@@ -72,8 +72,8 @@ public class DemoApplicationTests {
 		Set<Long> orderIds = Sets.newHashSet(
 				4435827939624378367L
 				,4435827939624378368L
-				,4434030864976863231L
-				,4434030864976863232L
+//				,4434030864976863231L
+//				,4434030864976863232L
 		);
 		orderRepository.findByOrderIdIn(orderIds)
 				.forEach(order -> log.info("result: {}", JsonUtil.toJson(order)));

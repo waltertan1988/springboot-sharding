@@ -1,10 +1,11 @@
 package com.walter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import com.walter.dao.entity.Order;
+import com.walter.dao.entity.OrderItem;
+import com.walter.dao.repository.OrderItemRepository;
 import com.walter.dao.repository.OrderRepository;
+import com.walter.util.JsonUtil;
 import com.walter.util.SequenceGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -22,48 +23,71 @@ import java.util.Set;
 public class DemoApplicationTests {
 	@Autowired
 	private OrderRepository orderRepository;
-
-	private ObjectMapper objectMapper = new ObjectMapper();
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
 	@Test
-	public void insert() throws JsonProcessingException {
+	public void insertOrder() {
 		Order order = new Order();
 		order.setOrderId(SequenceGenerator.nextSequence());
 		order.setUserId(9785);
 		order.setStatus("NEW");
 		orderRepository.save(order);
-		log.info("result: {}", objectMapper.writeValueAsString(order));
+		log.info("result: {}", JsonUtil.toJson(order));
 	}
 
 	@Test
-	public void select() throws JsonProcessingException {
+	public void insertOrderItem() {
+		OrderItem orderItem = new OrderItem();
+		orderItem.setOrderItemId(SequenceGenerator.nextSequence());
+		orderItem.setOrderId(4435827939624378367L);
+		orderItem.setUserId(12558);
+		orderItemRepository.save(orderItem);
+		log.info("result: {}", JsonUtil.toJson(orderItem));
+	}
+
+	@Test
+	public void selectOrder() {
 		Optional<Order> optional = orderRepository.findById(4435827939624378368L);
-		if(optional.isPresent()){
-			log.info("result: {}", objectMapper.writeValueAsString(optional.get()));
-		}
+		optional.ifPresent(order ->log.info("result: {}", JsonUtil.toJson(order)));
+	}
+
+	/**
+	 * 测试绑定表效果
+	 */
+	@Test
+	public void selectOrderJoinOrderItem(){
+		Set<Long> orderIds = Sets.newHashSet(
+				4435827939624378367L
+				,4435827939624378368L
+				,4434030864976863231L
+				,4434030864976863232L
+		);
+		orderItemRepository.findAllByOrderIdIn(orderIds)
+				.forEach(order -> log.info("result: {}", JsonUtil.toJson(order)));
 	}
 
 	@Test
-	public void selectByOrderIdIn() {
-		Set<Long> orderIds = Sets.newHashSet(4435827939624378368L, 4434030864976863232L, 4436917796065009664L);
-		orderRepository.findByOrderIdIn(orderIds).forEach(order -> {
-			try {
-				log.info("result: {}", objectMapper.writeValueAsString(order));
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-		});
+	public void selectOrderByOrderIdIn() {
+		Set<Long> orderIds = Sets.newHashSet(
+				4435827939624378367L
+				,4435827939624378368L
+				,4434030864976863231L
+				,4434030864976863232L
+		);
+		orderRepository.findByOrderIdIn(orderIds)
+				.forEach(order -> log.info("result: {}", JsonUtil.toJson(order)));
 	}
 
 	@Test
-	public void updateNonShardingKey(){
+	public void updateOrderWithNonShardingKey(){
 		Order order = orderRepository.findById(4434030864976863232L).get();
 		order.setStatus("PENDING");
 		orderRepository.save(order);
 	}
 
 	@Test
-	public void updateShardingKey(){
+	public void updateOrderWithShardingKey(){
 		Order order = orderRepository.findById(4405126608379207680L).get();
 		orderRepository.delete(order);
 		orderRepository.flush();

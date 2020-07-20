@@ -21,7 +21,7 @@ public class JdbcTests {
     private DataSource dataSource;
 
     @Test
-    public void selectOrder() throws SQLException {
+    public void select() throws SQLException {
         final String SQL = "SELECT o.*, i.order_item_id FROM t_order o JOIN t_order_item i ON o.order_id=i.order_id WHERE o.user_id=? AND o.order_id=?";
 
         try (Connection conn = dataSource.getConnection();
@@ -35,6 +35,21 @@ public class JdbcTests {
                 }
             }
         }
+    }
 
+    @Test
+    public void selectWithOrderBy() throws SQLException {
+        final String SQL = "SELECT o.*, i.order_item_id FROM t_order o JOIN t_order_item i ON o.order_id=i.order_id WHERE o.user_id=? ORDER BY o.order_id";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(SQL)) {
+            preparedStatement.setLong(1, 12558L);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while(rs.next()) {
+                    log.info("result: orderId={}, userId={}, status={}, orderItemId={}", rs.getLong("order_id"), rs.getLong("user_id"),
+                            rs.getString("status"), rs.getLong("order_item_id"));
+                }
+            }
+        }
     }
 }

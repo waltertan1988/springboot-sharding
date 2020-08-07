@@ -8,6 +8,7 @@ import org.apache.shardingsphere.api.config.sharding.strategy.InlineShardingStra
 import org.apache.shardingsphere.api.config.sharding.strategy.ShardingStrategyConfiguration;
 import org.apache.shardingsphere.shardingjdbc.api.ShardingDataSourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,6 +27,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories("com.walter.dao.repository")
+@ConditionalOnMissingClass("org.apache.shardingsphere.shardingjdbc.orchestration.spring.boot.OrchestrationSpringBootConfiguration")
 public class ShardingJpaConfig {
     @Autowired
     private ShardingDataSourceProperties shardingDataSourceProperties;

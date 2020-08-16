@@ -2,6 +2,7 @@ package com.walter.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.InlineShardingStrategyConfiguration;
@@ -11,12 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -25,15 +20,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+@Slf4j
 @Configuration
-@EnableJpaRepositories("com.walter.dao.repository")
-@ConditionalOnMissingClass("org.apache.shardingsphere.shardingjdbc.orchestration.spring.boot.OrchestrationSpringBootConfiguration")
-public class ShardingJpaConfig {
+@ConditionalOnMissingClass("org.apache.shardingsphere.orchestration.center.config.OrchestrationConfiguration")
+public class ShardingLocalConfig {
     @Autowired
     private ShardingDataSourceProperties shardingDataSourceProperties;
 
     @Bean
     public DataSource dataSource() {
+        log.info("Configure ShardingSphere with local yml file");
+
         final int DS_COUNT = shardingDataSourceProperties.getHosts().size();
         final int TABLE_COUNT = shardingDataSourceProperties.getTableCount();
 
@@ -71,26 +68,6 @@ public class ShardingJpaConfig {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
-        LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
-        bean.setDataSource(dataSource());
-        //加载实体类
-        bean.setPackagesToScan(shardingDataSourceProperties.getEntityPackagesToScan());
-        bean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
-        bean.setJpaProperties(properties);
-        return bean;
-    }
-
-    @Bean
-    @Primary
-    public PlatformTransactionManager transactionManager() {
-        return new JpaTransactionManager(entityManagerFactory().getObject());
     }
 
     private DataSource createSubDataSource(String host, int dsNum){

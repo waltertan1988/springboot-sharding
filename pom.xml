@@ -55,10 +55,11 @@
 
 		<dependency>
 			<groupId>org.apache.shardingsphere</groupId>
-			<artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+			<artifactId>sharding-jdbc-core</artifactId>
 			<version>${sharding-sphere.version}</version>
 		</dependency>
-		<!--shardingsphere采用zookeeper进行数据治理
+
+		<!--ShardingSphere采用zookeeper进行数据治理-->
 		<dependency>
 			<groupId>org.apache.shardingsphere</groupId>
 			<artifactId>sharding-jdbc-orchestration</artifactId>
@@ -66,14 +67,9 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.shardingsphere</groupId>
-			<artifactId>sharding-jdbc-orchestration-spring-boot-starter</artifactId>
-			<version>${sharding-sphere.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.shardingsphere</groupId>
 			<artifactId>sharding-orchestration-center-zookeeper-curator</artifactId>
 			<version>${sharding-sphere.version}</version>
-		</dependency>-->
+		</dependency>
 	</dependencies>
 
 	<build>

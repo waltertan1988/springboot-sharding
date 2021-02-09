@@ -27,7 +27,7 @@ public class JdbcTests {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(SQL)) {
             preparedStatement.setLong(1, 9785L);
-            preparedStatement.setLong(2, 4483471617055809536L);
+            preparedStatement.setLong(2, 4740584156199727105L);
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 while(rs.next()) {
                     log.info("result: orderId={}, userId={}, status={}, orderItemId={}", rs.getLong("order_id"), rs.getLong("user_id"),

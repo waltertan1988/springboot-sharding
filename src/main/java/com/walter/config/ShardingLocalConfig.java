@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+@Deprecated
 @Slf4j
 @Configuration
 @ConditionalOnMissingClass("org.apache.shardingsphere.orchestration.center.config.OrchestrationConfiguration")

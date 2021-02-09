@@ -1,11 +1,14 @@
 package com.walter.config;
 
 import com.google.common.collect.Maps;
+import com.walter.common.CustomDbComplexKeysShardingAlgorithm;
+import com.walter.common.CustomTableComplexKeysShardingAlgorithm;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
+import org.apache.shardingsphere.api.config.sharding.strategy.ComplexShardingStrategyConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.InlineShardingStrategyConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.ShardingStrategyConfiguration;
 import org.apache.shardingsphere.orchestration.center.config.CenterConfiguration;
@@ -86,7 +89,7 @@ public class ShardingJpaOrchestrationConfig {
         ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
         // 配置默认的分片规则
         shardingRuleConfig.setDefaultDataSourceName(dsName + 0);
-        shardingRuleConfig.setDefaultDatabaseShardingStrategyConfig(newDefaultDatabaseShardingStrategyConfiguration(dsName, DS_COUNT, "user_id"));
+        shardingRuleConfig.setDefaultDatabaseShardingStrategyConfig(newDefaultDatabaseShardingStrategyConfiguration("user_id"));
         // 设置绑定表
         shardingRuleConfig.setBindingTableGroups(Arrays.asList("t_order,t_order_item"));
 
@@ -120,10 +123,10 @@ public class ShardingJpaOrchestrationConfig {
         return result;
     }
 
-    private ShardingStrategyConfiguration newDefaultDatabaseShardingStrategyConfiguration(String dsName, int dsCount, String dsShardingCoulumn){
-        // 配置分库策略（ds${user_id % 2}）
-        String dsShardingExpression = String.format(SHARDING_STRATEGY_EXPRESSION, dsName, "$", dsShardingCoulumn, dsCount);
-        return new InlineShardingStrategyConfiguration(dsShardingCoulumn, dsShardingExpression);
+    private ShardingStrategyConfiguration newDefaultDatabaseShardingStrategyConfiguration(String dsShardingCoulumn){
+        // 配置默认分库策略
+        return new ComplexShardingStrategyConfiguration(dsShardingCoulumn,
+                new CustomDbComplexKeysShardingAlgorithm(shardingDataSourceProperties.getName()));
     }
 
     private TableRuleConfiguration newTableRuleConfiguration(String dsName, int dsCount, String dsShardingCoulumn, String tableName, int tableCount, String tableShardingColumn, boolean dsDefault){
@@ -134,9 +137,10 @@ public class ShardingJpaOrchestrationConfig {
             String dsShardingExpression = String.format(SHARDING_STRATEGY_EXPRESSION, dsName, "$", dsShardingCoulumn, dsCount);
             tableRuleConfig.setDatabaseShardingStrategyConfig(new InlineShardingStrategyConfiguration(dsShardingCoulumn, dsShardingExpression));
         }
-        // 配置分表策略（t_order${order_id % 2}）
-        String tableShardingExpression = String.format(SHARDING_STRATEGY_EXPRESSION, tableName, "$", tableShardingColumn, tableCount);
-        tableRuleConfig.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration(tableShardingColumn, tableShardingExpression));
+
+        // 使用自定义复合表分片策略
+        tableRuleConfig.setTableShardingStrategyConfig(new ComplexShardingStrategyConfiguration(tableShardingColumn,
+                new CustomTableComplexKeysShardingAlgorithm()));
 
         return tableRuleConfig;
     }

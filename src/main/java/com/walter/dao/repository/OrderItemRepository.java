@@ -11,5 +11,5 @@ import java.util.List;
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query("FROM Order o INNER JOIN OrderItem i ON o.orderId = i.orderId WHERE o.orderId IN :orderIds")
-    List<?> findAllByOrderIdIn(@Param("orderIds") Collection<Long> orderIds);
+    List<?> findAllByOrderIdIn(@Param("orderIds") List<Long> orderIds);
 }

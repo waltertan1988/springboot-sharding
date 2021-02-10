@@ -1,6 +1,5 @@
 package com.walter;
 
-import com.google.common.collect.Sets;
 import com.walter.dao.entity.Order;
 import com.walter.dao.entity.OrderItem;
 import com.walter.dao.repository.OrderItemRepository;
@@ -12,15 +11,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class JpaTests {
+
 	@Autowired
 	private OrderRepository orderRepository;
 	@Autowired
@@ -46,37 +47,31 @@ public class JpaTests {
 		log.info("result: {}", JsonUtil.toJson(orderItem));
 	}
 
+    /**
+     * 测试单条记录路由
+     */
 	@Test
 	public void selectOrder() {
-		Optional<Order> optional = orderRepository.findById(4435827939624378368L);
-		optional.ifPresent(order ->log.info("result: {}", JsonUtil.toJson(order)));
+		Optional<Order> optional = orderRepository.findById(4740584156199727105L);
+		optional.ifPresent(order -> log.info("result: {}", JsonUtil.toJson(order)));
 	}
+
+    /**
+     * 测试多条记录路由
+     */
+    @Test
+    public void selectOrderByOrderIdIn() {
+        List<Long> orderIds = Arrays.asList(4740584156199727104L, 4740584156199727105L);
+        log.info("result: {}", JsonUtil.toJson(orderRepository.findByOrderIdIn(orderIds)));
+    }
 
 	/**
 	 * 测试绑定表效果
 	 */
 	@Test
 	public void selectOrderJoinOrderItem(){
-		Set<Long> orderIds = Sets.newHashSet(
-				4435827939624378367L
-				,4435827939624378368L
-				,4434030864976863231L
-				,4434030864976863232L
-		);
-		orderItemRepository.findAllByOrderIdIn(orderIds)
-				.forEach(order -> log.info("result: {}", JsonUtil.toJson(order)));
-	}
-
-	@Test
-	public void selectOrderByOrderIdIn() {
-		Set<Long> orderIds = Sets.newHashSet(
-				4435827939624378367L
-				,4435827939624378368L
-//				,4434030864976863231L
-//				,4434030864976863232L
-		);
-		orderRepository.findByOrderIdIn(orderIds)
-				.forEach(order -> log.info("result: {}", JsonUtil.toJson(order)));
+		List<Long> orderIds = Arrays.asList(4740584156199727104L, 4740584156199727105L);
+        log.info("result: {}", JsonUtil.toJson(orderItemRepository.findAllByOrderIdIn(orderIds)));
 	}
 
 	@Test

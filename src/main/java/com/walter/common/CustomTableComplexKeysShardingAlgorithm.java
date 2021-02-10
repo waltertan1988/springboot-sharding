@@ -7,6 +7,7 @@ import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * @author walter
@@ -27,7 +28,8 @@ public class CustomTableComplexKeysShardingAlgorithm implements ComplexKeysShard
         long tableIndex = shardingValue % availableTargetNames.size();
         String tableName = new StringBuilder(complexKeysShardingValue.getLogicTableName()).append(tableIndex).toString();
 
-        if(Objects.nonNull(availableTargetNames) && availableTargetNames.contains(tableName)){
+        if(Objects.nonNull(availableTargetNames)
+                && availableTargetNames.stream().map(String::toLowerCase).anyMatch(Predicate.isEqual(tableName.toLowerCase()))){
             return Arrays.asList(tableName);
         }
 

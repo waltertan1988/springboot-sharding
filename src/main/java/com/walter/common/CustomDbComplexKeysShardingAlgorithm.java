@@ -9,6 +9,7 @@ import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * @author walter
@@ -35,7 +36,8 @@ public class CustomDbComplexKeysShardingAlgorithm implements ComplexKeysSharding
         long dbIndex = shardingValue % availableTargetNames.size();
         String dbName = new StringBuilder(shardPrefix == null ? DEFAULT_SHARD_PREFIX : shardPrefix).append(dbIndex).toString();
 
-        if(Objects.nonNull(availableTargetNames) && availableTargetNames.contains(dbName)){
+        if(Objects.nonNull(availableTargetNames)
+                && availableTargetNames.stream().map(String::toLowerCase).anyMatch(Predicate.isEqual(dbName.toLowerCase()))){
             return Arrays.asList(dbName);
         }
 

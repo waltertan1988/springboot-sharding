@@ -1,6 +1,7 @@
 package com.walter.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -17,6 +18,7 @@ import java.util.Properties;
 @EnableJpaRepositories("com.walter.dao.repository")
 public class JpaConfig {
     @Autowired
+    @Qualifier("shardingDataSource")
     private DataSource dataSource;
     @Autowired
     private ShardingDataSourceProperties shardingDataSourceProperties;

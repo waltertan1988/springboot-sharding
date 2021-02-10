@@ -33,8 +33,8 @@ public class ShardingJpaOrchestrationConfig {
     @Autowired
     private ShardingDataSourceProperties shardingDataSourceProperties;
 
-    @Bean
-    public DataSource dataSource() throws SQLException {
+    @Bean("shardingDataSource")
+    public DataSource shardingDataSource() throws SQLException {
 
         log.info("Configure ShardingSphere with zookeeper");
 

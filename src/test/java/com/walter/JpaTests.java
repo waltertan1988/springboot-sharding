@@ -61,7 +61,7 @@ public class JpaTests {
      */
     @Test
     public void selectOrderByOrderIdIn() {
-        List<Long> orderIds = Arrays.asList(4740584156199727104L, 4740584156199727105L);
+        List<Long> orderIds = Arrays.asList(4740584156199727104L, 4740584156199727105L, 4741379729820487680L);
         log.info("result: {}", JsonUtil.toJson(orderRepository.findByOrderIdIn(orderIds)));
     }
 
@@ -70,7 +70,7 @@ public class JpaTests {
 	 */
 	@Test
 	public void selectOrderJoinOrderItem(){
-		List<Long> orderIds = Arrays.asList(4740584156199727104L, 4740584156199727105L);
+		List<Long> orderIds = Arrays.asList(4740584156199727104L, 4740584156199727105L, 4741379729820487680L);
         log.info("result: {}", JsonUtil.toJson(orderItemRepository.findAllByOrderIdIn(orderIds)));
 	}
 

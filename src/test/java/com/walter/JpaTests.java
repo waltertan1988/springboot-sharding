@@ -32,7 +32,7 @@ public class JpaTests {
 		Order order = new Order();
 		order.setOrderId(SequenceGenerator.nextSequence());
 		order.setUserId(9785);
-		order.setStatus("NEW");
+		order.setStatus("CLOSED");
 		orderRepository.save(order);
 		log.info("result: {}", JsonUtil.toJson(order));
 	}
@@ -40,8 +40,8 @@ public class JpaTests {
 	@Test
 	public void insertOrderItem() {
 		OrderItem orderItem = new OrderItem();
-		orderItem.setOrderItemId(SequenceGenerator.nextSequence());
-		orderItem.setOrderId(4435827939624378367L);
+		orderItem.setOrderItemId(System.currentTimeMillis());
+		orderItem.setOrderId(4740584156199727104L);
 		orderItem.setUserId(12558);
 		orderItemRepository.save(orderItem);
 		log.info("result: {}", JsonUtil.toJson(orderItem));
@@ -76,14 +76,14 @@ public class JpaTests {
 
 	@Test
 	public void updateOrderWithNonShardingKey(){
-		Order order = orderRepository.findById(4434030864976863232L).get();
-		order.setStatus("PENDING");
+		Order order = orderRepository.findById(4740584156199727104L).get();
+		order.setStatus("NEW");
 		orderRepository.save(order);
 	}
 
 	@Test
 	public void updateOrderWithShardingKey(){
-		Order order = orderRepository.findById(4405126608379207680L).get();
+		Order order = orderRepository.findById(4740584156199727104L).get();
 		orderRepository.delete(order);
 		orderRepository.flush();
 		order.setUserId(12558);

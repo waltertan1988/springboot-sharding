@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -17,17 +18,17 @@ import java.util.function.Predicate;
  * 分表规则：按sharding column对分表总数进行取余
  */
 @Slf4j
-public class CustomTableComplexKeysShardingAlgorithm implements ComplexKeysShardingAlgorithm<Long> {
+public class CustomTableComplexKeysShardingAlgorithm implements ComplexKeysShardingAlgorithm<Comparable<Number>> {
 
     @Override
-    public Collection<String> doSharding(Collection<String> availableTargetNames, ComplexKeysShardingValue<Long> complexKeysShardingValue) {
+    public Collection<String> doSharding(Collection<String> availableTargetNames, ComplexKeysShardingValue<Comparable<Number>> complexKeysShardingValue) {
         log.info("[CustomTableComplexKeysShardingAlgorithm.doSharding] start: {}, {}", availableTargetNames, complexKeysShardingValue);
 
         List<String> resultList = Lists.newArrayList();
 
         complexKeysShardingValue.getColumnNameAndShardingValuesMap().values()
                 .stream().flatMap(Collection::stream).forEach(shardingValue -> {
-            long tableIndex = shardingValue % availableTargetNames.size();
+            long tableIndex = ((Number)shardingValue).longValue() % availableTargetNames.size();
             String tableName = new StringBuilder(complexKeysShardingValue.getLogicTableName()).append(tableIndex).toString();
             if(Objects.nonNull(availableTargetNames)
                     && availableTargetNames.stream().map(String::toLowerCase).anyMatch(Predicate.isEqual(tableName.toLowerCase()))){

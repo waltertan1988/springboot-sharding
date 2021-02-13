@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -21,21 +22,21 @@ import java.util.function.Predicate;
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomDbComplexKeysShardingAlgorithm implements ComplexKeysShardingAlgorithm<Long> {
+public class CustomDbComplexKeysShardingAlgorithm implements ComplexKeysShardingAlgorithm<Comparable<Number>> {
 
     private String shardPrefix;
 
     private final String DEFAULT_SHARD_PREFIX = "sharding";
 
     @Override
-    public Collection<String> doSharding(Collection<String> availableTargetNames, ComplexKeysShardingValue<Long> complexKeysShardingValue) {
+    public Collection<String> doSharding(Collection<String> availableTargetNames, ComplexKeysShardingValue<Comparable<Number>> complexKeysShardingValue) {
         log.info("[CustomDbComplexKeysShardingAlgorithm.doSharding] start: {}, {}", availableTargetNames, complexKeysShardingValue);
 
         List<String> resultList = Lists.newArrayList();
 
         complexKeysShardingValue.getColumnNameAndShardingValuesMap().values()
                 .stream().flatMap(Collection::stream).forEach(shardingValue -> {
-            long dbIndex = shardingValue % availableTargetNames.size();
+            long dbIndex = ((Number)shardingValue).longValue() % availableTargetNames.size();
             String dbName = new StringBuilder(shardPrefix == null ? DEFAULT_SHARD_PREFIX : shardPrefix).append(dbIndex).toString();
 
             if(Objects.nonNull(availableTargetNames)
